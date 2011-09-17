@@ -30,7 +30,10 @@ module AI.SimpleEA (
 
 import Control.Monad.Random
 
+-- | An individual's fitness is simply a number.
 type Fitness = Double
+
+-- | A genome is a list (e.g. a 'String').
 type Genome a = [a]
 
 -- | A fitness functions assigns a fitness score to a genome. The rest of the
@@ -120,16 +123,18 @@ bitstring i simply s defined to be the number of @1@'s it contains.
 >import System.Environment (getArgs)
 >import Control.Monad (unless)
 
-The @numOnes@ function will function as our 'FitnessFunc' and simply returns the number of @1@'s
-in the string.
+The @numOnes@ function will function as our 'FitnessFunc' and simply returns
+the number of @1@'s in the string. It ignores the rest of the population (the
+second parameter) since the fitness is not relative to the other individuals in
+the generation.
 
 >numOnes :: FitnessFunc Char
 >numOnes g _ = (fromIntegral . length . filter (=='1')) g
 
 The @select@ function is our 'SelectionFunction'. It uses sigma-scaled, fitness-proportionate
 selection. 'sigmaScale' is defined in 'SimpleEA.Utils'. By first taking the four
-best genomes (by using the @elite@ function) we get elitism, making sure that
-maximum fitness never decreases.
+best genomes (by using the @elite@ function) we make sure that maximum fitness
+never decreases ('elitism').
 
 >select :: SelectionFunction Char
 >select gs = select' (take 4 $ elite gs)
@@ -143,9 +148,9 @@ maximum fitness never decreases.
 >                     let newPop = p1:p2:gs'
 >                     select' newPop
 
-Crossover consists of finding a crossover point along the length of the genomes
-and swapping what comes after between the two genomes. The parameter @p@
-determines the likelihood of crossover taking place.
+Crossover is done by finding a crossover point along the length of the genomes
+and swapping what comes after that point between the two genomes. The parameter
+@p@ determines the likelihood of crossover taking place.
 
 >crossOver :: Double -> RecombinationOp Char
 >crossOver p (g1,g2) = do
@@ -156,7 +161,8 @@ determines the likelihood of crossover taking place.
 >           return (take r g1 ++ drop r g2, take r g2 ++ drop r g1)
 >       else return (g1,g2)
 
-Mutation flips a random bit along the length of the genome with probability @p@.
+The mutation operator @mutate@ flips a random bit along the length of the
+genome with probability @p@.
 
 >mutate :: Double -> MutationOp Char
 >mutate p g = do
