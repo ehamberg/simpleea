@@ -84,7 +84,7 @@ fitPropSelect xs = do
     return $ (fst . head . dropWhile ((rand >) . snd)) xs'
 
 -- |Performs tournament selection amoing @size@ individuals and returns the winner
-tournamentSelect :: (RandomGen g) => [(a, Fitness)] -> Int -> Rand g a
+tournamentSelect :: [(a, Fitness)] -> Int -> Rand PureMT a
 tournamentSelect xs size = do
     let l = length xs
     rs <- liftM (take size . nub) $ getRandomRs (0,l-1)
