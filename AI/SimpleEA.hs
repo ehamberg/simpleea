@@ -50,8 +50,9 @@ type SelectionFunction a = [(Genome a, Fitness)] -> Rand StdGen [Genome a]
 -- /children/.
 type RecombinationOp a = (Genome a, Genome a) -> Rand StdGen (Genome a, Genome a)
 
--- | A mutation operator takes a genome and returns an altered copy of it.
-type MutationOp a        = Genome a -> Rand StdGen (Genome a)
+-- | A mutation operator takes a genome and returns (a possibly altered) copy
+-- of it.
+type MutationOp a = Genome a -> Rand StdGen (Genome a)
 
 -- | Runs the evolutionary algorithm with the given start population. This will
 -- produce an infinite list of generations and 'take' or 'takeWhile' should be
