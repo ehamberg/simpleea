@@ -19,7 +19,7 @@ module AI.SimpleEA.Utils (
   , getPlottingData
 ) where
 
-import Control.Monad (liftM)
+import Control.Monad (liftM, replicateM)
 import Control.Monad.Random
 import Data.List (genericLength, zip4, sortBy, nub, elemIndices, sort)
 import AI.SimpleEA
@@ -48,12 +48,12 @@ stdDev p =
           mean    = sum p/len
           sqDiffs = map (\n -> (n-mean)**2) p
 
--- |Returns an infinite list of random genomes of length @len@ made of elements
--- in the range @[from,to]@
-randomGenomes :: (Random a, Enum a) => Int -> a -> a -> StdGen -> [Genome a]
-randomGenomes len from to = do
-    l <- randomRs (from,to)
-    return $ nLists len l
+-- |Returns a list of @len@ random genomes who has length @genomeLen@ made of
+-- elements in the range @[from,to]@.
+randomGenomes :: (RandomGen g, Random a, Enum a) => Int -> Int -> a -> a -> Rand g [Genome a]
+randomGenomes len genomeLen from to = do
+    l <- replicateM (len*genomeLen) $ getRandomR (from,to)
+    return $ nLists genomeLen l
     where nLists :: Int -> [a] -> [[a]]
           nLists _ [] = []
           nLists n ls = take n ls : nLists n (drop n ls)
@@ -76,7 +76,7 @@ rankScale fs = map (\n -> max'-fromIntegral n) ranks
 -- |Fitness-proportionate selection: select a random item from a list of (item,
 -- score) where each item's chance of being selected is proportional to its
 -- score
-fitPropSelect :: [(a, Fitness)] -> Rand StdGen a
+fitPropSelect :: (RandomGen g) => [(a, Fitness)] -> Rand g a
 fitPropSelect xs = do
     let xs' = zip (map fst xs) (scanl1 (+) $ map snd xs)
     let sumScores = (snd . last) xs'
@@ -84,7 +84,7 @@ fitPropSelect xs = do
     return $ (fst . head . dropWhile ((rand >) . snd)) xs'
 
 -- |Performs tournament selection amoing @size@ individuals and returns the winner
-tournamentSelect :: [(a, Fitness)] -> Int -> Rand StdGen a
+tournamentSelect :: (RandomGen g) => [(a, Fitness)] -> Int -> Rand g a
 tournamentSelect xs size = do
     let l = length xs
     rs <- liftM (take size . nub) $ getRandomRs (0,l-1)

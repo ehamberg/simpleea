@@ -29,6 +29,7 @@ module AI.SimpleEA (
 ) where
 
 import Control.Monad.Random
+import System.Random.Mersenne.Pure64
 
 -- | An individual's fitness is simply a number.
 type Fitness = Double
@@ -44,15 +45,15 @@ type FitnessFunc a       = Genome a -> [Genome a] -> Fitness
 -- | A selection function is responsible for selection. It takes pairs of
 -- genomes and their fitness and is responsible for returning one or more
 -- individuals.
-type SelectionFunction a = [(Genome a, Fitness)] -> Rand StdGen [Genome a]
+type SelectionFunction a = [(Genome a, Fitness)] -> Rand PureMT [Genome a]
 
 -- | A recombination operator takes two /parent/ genomes and returns two
 -- /children/.
-type RecombinationOp a = (Genome a, Genome a) -> Rand StdGen (Genome a, Genome a)
+type RecombinationOp a = (Genome a, Genome a) -> Rand PureMT (Genome a, Genome a)
 
 -- | A mutation operator takes a genome and returns (a possibly altered) copy
 -- of it.
-type MutationOp a = Genome a -> Rand StdGen (Genome a)
+type MutationOp a = Genome a -> Rand PureMT (Genome a)
 
 -- | Runs the evolutionary algorithm with the given start population. This will
 -- produce an infinite list of generations and 'take' or 'takeWhile' should be
@@ -74,7 +75,7 @@ runEA ::
   SelectionFunction a ->
   RecombinationOp a ->
   MutationOp a ->
-  StdGen ->
+  PureMT ->
   [[(Genome a,Fitness)]]
 runEA startPop fitFun selFun recOp mutOp g =
   let p = zip startPop (map (`fitFun` startPop) startPop)
@@ -86,7 +87,7 @@ generations ::
   FitnessFunc a ->
   RecombinationOp a ->
   MutationOp a ->
-  Rand StdGen [[(Genome a, Fitness)]]
+  Rand PureMT [[(Genome a, Fitness)]]
 generations !pop selFun fitFun recOp mutOp = do
     -- first, select parents for the new generation
     newGen <- selFun pop
@@ -102,7 +103,7 @@ generations !pop selFun fitFun recOp mutOp = do
 
     return $ pop : nextGens
 
-doRecombinations :: [Genome a] -> RecombinationOp a -> Rand StdGen [Genome a]
+doRecombinations :: [Genome a] -> RecombinationOp a -> Rand PureMT [Genome a]
 doRecombinations []      _   = return []
 doRecombinations [_]     _   = error "odd number of parents"
 doRecombinations (a:b:r) rec = do
@@ -119,6 +120,7 @@ bitstring i simply s defined to be the number of @1@'s it contains.
 >import AI.SimpleEA
 >import AI.SimpleEA.Utils
 >
+>import System.Random.Mersenne.Pure64
 >import Control.Monad.Random
 >import Data.List
 >import System.Environment (getArgs)
@@ -186,10 +188,9 @@ gnuplot (<http://www.gnuplot.info/>).
 
 >main = do
 >    args <- getArgs
->    g <- newStdGen
->    let (g1,g2) = split g
->    let p = take 100 $ randomGenomes 20 '0' '1' g1
->    let gs = take 101 $ runEA p numOnes select (crossOver 0.75) (mutate 0.01) g2
+>    g <- newPureMT
+>    let (p,g') = runRand (randomGenomes 100 20 '0' '1') g
+>    let gs = take 101 $ runEA p numOnes select (crossOver 0.75) (mutate 0.01) g'
 >    let fs = avgFitnesses gs
 >    let ms = maxFitnesses gs
 >    let ds = stdDeviations gs
