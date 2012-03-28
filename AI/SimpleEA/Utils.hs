@@ -22,6 +22,7 @@ module AI.SimpleEA.Utils (
 import Control.Monad (liftM, replicateM)
 import Control.Monad.Random
 import Data.List (genericLength, zip4, sortBy, nub, elemIndices, sort)
+import System.Random.Mersenne.Pure64 (PureMT)
 import AI.SimpleEA
 
 -- |Returns the average fitnesses for a list of generations.
