@@ -134,10 +134,11 @@ the generation.
 >numOnes :: FitnessFunc Char
 >numOnes g _ = (fromIntegral . length . filter (=='1')) g
 
-The @select@ function is our 'SelectionFunction'. It uses sigma-scaled, fitness-proportionate
-selection. 'sigmaScale' is defined in 'SimpleEA.Utils'. By first taking the four
-best genomes (by using the @elite@ function) we make sure that maximum fitness
-never decreases ('elitism').
+The @select@ function is our 'SelectionFunction'. It uses sigma-scaled,
+fitness-proportionate selection. 'sigmaScale' is defined in
+'AI.SimpleEA.Utils'. By first taking the four best genomes (by using the
+@elite@ function) we make sure that maximum fitness never decreases
+('elitism').
 
 >select :: SelectionFunction Char
 >select gs = select' (take 4 $ elite gs)

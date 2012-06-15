@@ -1,7 +1,7 @@
 name:               SimpleEA
 category:           AI
 build-type:         Simple
-version:            0.2
+version:            0.2.1
 synopsis:           Simple evolutionary algorithm framework.
 description:        Simple framework for running an evolutionary algorithm by
                     providing selection, recombination, and mutation operators.
