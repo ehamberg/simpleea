@@ -7,7 +7,6 @@ description:        Simple framework for running an evolutionary algorithm by
                     providing selection, recombination, and mutation operators.
 license:            BSD3
 License-file:       LICENSE
-category:           AI
 author:             Erlend Hamberg
 maintainer:         ehamberg@gmail.com
 stability:          experimental
