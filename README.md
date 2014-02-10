@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/ehamberg/simpleea.png)](https://travis-ci.org/ehamberg/simpleea)
+
 `SimpleEA` is a Haskell library for evolutionary algorithms. It is written to be
 easy to understand and use.
 
