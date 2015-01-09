@@ -114,8 +114,7 @@ doRecombinations (a:b:r) rec = do
 {- $SimpleEAExample
 
 The aim of this /OneMax/ EA is to maximize the number of @1@'s in a bitstring.
-The fitness of a
-bitstring i simply s defined to be the number of @1@'s it contains.
+The fitness of a bitstring is defined to be the number of @1@'s it contains.
 
 >import AI.SimpleEA
 >import AI.SimpleEA.Utils
