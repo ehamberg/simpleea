@@ -1,7 +1,7 @@
 {-# Language BangPatterns #-}
 
 {- |
-Copyright    : 2010-2011 Erlend Hamberg
+Copyright    : 2010-2016 Erlend Hamberg
 License      : BSD3
 Stability    : experimental
 Portability  : portable
