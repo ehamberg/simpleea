@@ -11,7 +11,7 @@ evaluating a genome's fitness, a function for probabilistic selection among a
 pool of genomes, and recombination and mutation operators, 'runEA' will run an
 EA that lazily produces an infinite list of generations.
 
-'AI.SimpleEA.Utils' contains utilitify functions that makes it easier to write
+'AI.SimpleEA.Utils' contains utility functions that makes it easier to write
 the genetic operators.
 
 -}
